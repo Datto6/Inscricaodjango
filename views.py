@@ -1,30 +1,24 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from django.contrib.auth import authenticate,login,logout
+from django import forms
+from . models import Horario,Aluno,Aula,Sala
+from django.db.models import Max
+# Create your views here.
 
-# Create your views here. 
 def index(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse("users:login"))
-    return render(request,"users/index.html")
+    return render(request, "aulas/index.html")
 
-def login_view(request):
-    if request.method=="POST":
-        username= request.POST["username"]
-        password=request.POST["password"]
-        user=authenticate(request,username=username,password=password)  #se credenciais tao certas, devolve usuario
-        if user is not None:
-            login(request,user)
-            return HttpResponseRedirect(reverse("users:index"))
-        else:
-            return render(request,"users/login.html",{
-                "message":"Invalid user credentials"
-            })
-    return render(request,"users/login.html")
-
-def logout_view(request):
-    logout(request)
-    return render(request,"users/login.html",{
-        "message":"Logged Out"
+def inscricao(request,aluno_id):
+    aluno=Aluno.objects.get(pk=aluno_id).all()
+    horario_max=Horario.objects.aggregate(Max('numero'))
+    return render(request,"aulas/inscricao.html",{
+        "aluno":aluno,
+        "numero_horarios":horario_max,
+        "aulas":Aula.objects.exclude(vagas<=0).all(),
     })
+
+def form(request,aluno_id):
+    if request.method=="POST":
+        aluno=aluno.objects.get(pk=aluno_id)
+        aula=Aula.object.get(pk=int(request.POST["aula"]))
+        aula.alunos.add(aluno)
+        return HttpResponseRedirect(reverse("perfil",args=(aluno_id,)))

@@ -1,0 +1,22 @@
+{%extends 'aulas/layout.html'%}
+
+{%block body%}
+<h1> Bem vindo, {{aluno.nome}}!</h1>
+<h2>Escolher aulas</h2>
+
+<form action="{% url 'form'%}" method="post">
+    {%csrf_token%}
+    <select name="aula">
+        {%for horario in horarios%}
+            {%for aula in aulas%}
+                {%if aula.horario == horario%}                    <!--How do I get aula object that has already been used out of the aulas list without deleting it from db?-->
+                    <option value="{{aula.id}}">{{aula}}</option>
+                {%endif%}
+            {%endfor%}
+        {%endfor%}
+
+    </select>
+    <input type="submit">
+</form>
+
+{%endblock%}
