@@ -4,7 +4,7 @@
 <h1> Bem vindo, {{aluno.nome}}!</h1>
 <h2>Escolher aulas</h2>
 
-<form action="{% url 'form'%}" method="post">
+<form action="{% url 'aulas:form'%}" method="post">
     {%csrf_token%}
     <select name="aula">
         {%for horario in horarios%}
