@@ -8,7 +8,9 @@ from aulas.models import Aluno
 def index(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("users:login"))
-    return render(request,"users/index.html")
+    return render(request,"users/index.html",{
+        "aluno":Aluno.objects.get(matricula=int(request.user.username))
+    })
 
 def login_view(request):
     if request.method=="POST":
