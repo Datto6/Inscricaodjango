@@ -21,7 +21,7 @@ class Aluno(models.Model):
     first=models.CharField(max_length=64)
     last=models.CharField(max_length=64)
     aulas=models.ManyToManyField(Aula,blank=True,related_name="alunos")
-
+    matricula=models.IntegerField()
     def __str__(self):
         return f"{self.first} {self.last}"
 
